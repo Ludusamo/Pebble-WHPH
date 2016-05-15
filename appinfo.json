@@ -1,0 +1,19 @@
+{
+  "uuid": "9419c395-4b15-44e3-bc94-bdb841aa0053",
+  "shortName": "Pebble-WHPH",
+  "longName": "Pebble-WHPH",
+  "companyName": "Ludusamo",
+  "versionLabel": "0.1",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt", "chalk"],
+  "enableMultiJS": true,
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
