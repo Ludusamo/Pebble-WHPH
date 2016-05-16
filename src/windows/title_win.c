@@ -1,11 +1,16 @@
 #include "title_win.h"
 
-void title_continue_callback() {
-
+void title_continue_callback(ClickRecognizerRef recognizer, void *context) {
+	Select_Win *win = select_win_create();
+	push_select_win(win, true);
 }
 
-void register_click_providers() {
+void title_click_config_provider(void *context) {
+	window_single_click_subscribe(BUTTON_ID_SELECT, title_continue_callback);
+}
 
+void register_click_providers(Title_Win *win) {
+	window_set_click_config_provider(win->window, title_click_config_provider);
 }
 
 Title_Win *title_win_create() {
@@ -13,13 +18,13 @@ Title_Win *title_win_create() {
 	if (win) {
 		win->window = window_create();
 
+		register_click_providers(win);
+
 		Layer *window_layer = window_get_root_layer(win->window);
 		GRect title_bounds = layer_get_bounds(window_layer);
 		GRect company_bounds = layer_get_bounds(window_layer);
 
 		// Relative positioning
-		title_bounds.origin.y += title_bounds.size.h / 3;
-		title_bounds.size.h /= 2;
 		win->title = text_layer_create(title_bounds);
 
 		company_bounds.size.h /= 4;

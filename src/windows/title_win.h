@@ -3,14 +3,17 @@
 
 #include <pebble.h>
 
+#include "select_win.h"
+
 typedef struct {
 	Window *window;	
 	TextLayer *title;
 	TextLayer *company;
 } Title_Win;
 
-void title_continue_callback();
-void register_click_providers();
+void title_continue_callback(ClickRecognizerRef recognizer, void *context);
+void title_click_config_provider(void *context);
+void register_click_providers(Title_Win *win);
 
 Title_Win *title_win_create();
 void title_win_destroy(Title_Win *win);
