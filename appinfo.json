@@ -1,19 +1,27 @@
 {
-  "uuid": "9419c395-4b15-44e3-bc94-bdb841aa0053",
-  "shortName": "Pebble-WHPH",
-  "longName": "Pebble-WHPH",
-  "companyName": "Ludusamo",
-  "versionLabel": "0.1",
-  "sdkVersion": "3",
-  "targetPlatforms": ["aplite", "basalt", "chalk"],
-  "enableMultiJS": true,
-  "watchapp": {
-    "watchface": false
-  },
-  "appKeys": {
-    "dummy": 0
-  },
-  "resources": {
-    "media": []
-  }
+    "appKeys": {
+        "dummy": 0
+    },
+    "capabilities": [
+        ""
+    ],
+    "companyName": "Ludusamo",
+    "enableMultiJS": true,
+    "longName": "Pebble-WHPH",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "sdkVersion": "3",
+    "shortName": "Pebble-WHPH",
+    "targetPlatforms": [
+        "aplite",
+        "basalt",
+        "chalk"
+    ],
+    "uuid": "9419c395-4b15-44e3-bc94-bdb841aa0053",
+    "versionLabel": "0.1",
+    "watchapp": {
+        "watchface": false
+    }
 }

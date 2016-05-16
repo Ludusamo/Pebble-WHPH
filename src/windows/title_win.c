@@ -25,6 +25,7 @@ Title_Win *title_win_create() {
 		GRect company_bounds = layer_get_bounds(window_layer);
 
 		// Relative positioning
+    title_bounds.origin.y += title_bounds.size.h / 20;
 		win->title = text_layer_create(title_bounds);
 
 		company_bounds.size.h /= 4;
@@ -40,6 +41,8 @@ Title_Win *title_win_create() {
 
 		layer_add_child(window_layer, text_layer_get_layer(win->title));
 		layer_add_child(window_layer, text_layer_get_layer(win->company));
+    
+    text_layer_enable_screen_text_flow_and_paging(win->title, 2);
 		return win;
 	}
 	return NULL;
