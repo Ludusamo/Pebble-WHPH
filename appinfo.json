@@ -10,7 +10,10 @@
     "longName": "Pebble-WHPH",
     "projectType": "native",
     "resources": {
-        "media": []
+        "media": [
+		{"type": "bitmap", "name": "TICK", "file": "tick.png"},
+		{"type": "bitmap", "name": "CROSS", "file": "cross.png"}
+	]
     },
     "sdkVersion": "3",
     "shortName": "Pebble-WHPH",

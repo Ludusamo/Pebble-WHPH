@@ -13,9 +13,9 @@ typedef struct {
 	SimpleMenuItem menu_items[NUM_ITEMS];
 } Select_Win;
 
-static void menu_select_callback();
-static void menu_sections_init(Select_Win *win);
-static void menu_items_init(Select_Win *win);
+void menu_select_callback();
+void menu_sections_init(Select_Win *win);
+void menu_items_init(Select_Win *win);
 
 Select_Win *select_win_create();
 void select_win_destroy(Select_Win *win);

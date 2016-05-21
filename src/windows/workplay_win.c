@@ -1,5 +1,47 @@
 #include "workplay_win.h"
 
+TextLayer *create_time_display(GRect bounds) {
+	#if defined(PBL_RECT)
+	bounds.origin.x -= ACTION_BAR_WIDTH;
+	#endif
+	bounds.origin.y += bounds.size.h / 20;
+	bounds.size.h /= 3;		
+	TextLayer *text = text_layer_create(bounds);
+	text_layer_set_text(text, "00:00");
+	text_layer_set_font(text, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+	text_layer_set_text_alignment(text, GTextAlignmentCenter);
+	return text;
+}
+
+TextLayer *create_stop_display(GRect bounds) {
+	#if defined(PBL_RECT)
+	bounds.origin.x -= ACTION_BAR_WIDTH;
+	#endif
+	bounds.origin.y += bounds.size.h * 2 / 3;	
+	bounds.size.h /= 3;
+	TextLayer *text = text_layer_create(bounds);
+	text_layer_set_text(text, "Stop?");
+	text_layer_set_font(text, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+	text_layer_set_text_alignment(text, GTextAlignmentCenter);
+	return text;
+}
+
+TextLayer *create_start_display(GRect bounds) {
+	return NULL;
+}
+
+void create_actionbar(WorkPlay_Win *win) {
+	win->actionbar = action_bar_layer_create();
+	action_bar_layer_set_click_config_provider(win->actionbar, action_bar_provider);
+	
+	win->tick_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TICK);
+	win->cross_bitmap = gbitmap_create_with_resource(RESOURCE_ID_CROSS);
+
+	action_bar_layer_set_icon(win->actionbar, BUTTON_ID_UP, win->tick_bitmap);
+	action_bar_layer_set_icon(win->actionbar, BUTTON_ID_DOWN, win->cross_bitmap);
+	action_bar_layer_add_to_window(win->actionbar, win->window);
+}
+
 void start_timer() {
 
 }
@@ -8,68 +50,43 @@ void stop_timer() {
 
 }
 
-void yes_callback() {
+void start_callback(ClickRecognizerRef recognizer, void *context) {
 
 }
 
-void no_callback() {
+void exit_callback(ClickRecognizerRef recognizer, void *context) {
 
 }
 
-void stop_callback() {
+void stop_callback(ClickRecognizerRef recognizer, void *context) {
 
 }
 
-void workplay_menu_sections_init(WorkPlay_Win *win) {
-	win->menu_sections[0] = (SimpleMenuSection) {
-		.num_items = NUM_ITEMS,
-		.items = win->menu_items
-	};
-}
-
-void workplay_menu_items_init(WorkPlay_Win *win) {
-	int i = 0;
-	win->menu_items[i++] = (SimpleMenuItem) {
-		.title = "Yes",
-		.callback = yes_callback
-	};
-	win->menu_items[i++] = (SimpleMenuItem) {
-		.title= "No",
-		.callback = no_callback
-	};
+void action_bar_provider(void *context) {
+	window_single_click_subscribe(BUTTON_ID_UP, (ClickHandler) (in_mode) ? stop_callback : start_callback);
+	window_single_click_subscribe(BUTTON_ID_DOWN, (ClickHandler) exit_callback);
 }
 
 WorkPlay_Win *workplay_win_create(MODE mode) {
 	WorkPlay_Win *win = (WorkPlay_Win*) malloc(sizeof(WorkPlay_Win));
 	if (win) {
+		if (persist_exists(CUR_MODE)) in_mode = persist_read_int(CUR_MODE) == mode;
+		else in_mode = 0;
 		win->window = window_create();
 		
-		workplay_menu_items_init(win);
-		workplay_menu_sections_init(win);
-
 		Layer *window_layer = window_get_root_layer(win->window);
-		GRect time_bounds = layer_get_bounds(window_layer);
-		GRect stop_bounds = layer_get_bounds(window_layer);
-		GRect start_bounds = layer_get_bounds(window_layer);
-		GRect menu_bounds = layer_get_bounds(window_layer);
+		GRect bounds = layer_get_bounds(window_layer);
 
-		time_bounds.origin.y += time_bounds.size.h / 20;
-		time_bounds.size.h /= 3;		
-		win->time_display = text_layer_create(time_bounds);
-		text_layer_set_text(win->time_display, "00:00");
-		text_layer_set_text_alignment(win->time_display, GTextAlignmentCenter);
+		win->time_display = create_time_display(bounds);
+		win->stop_display = create_stop_display(bounds);
 
-		stop_bounds.origin.y += stop_bounds.size.h * 2 / 3;	
-		stop_bounds.size.h /= 3;
-		win->stop_display = text_layer_create(stop_bounds);
-		text_layer_set_text(win->stop_display, "Stop?");
-		text_layer_set_text_alignment(win->stop_display, GTextAlignmentCenter);
-		
 		layer_add_child(window_layer, text_layer_get_layer(win->time_display));
 		layer_add_child(window_layer, text_layer_get_layer(win->stop_display));
 		
     		text_layer_enable_screen_text_flow_and_paging(win->time_display, 2);
     		text_layer_enable_screen_text_flow_and_paging(win->stop_display, 2);
+
+		create_actionbar(win);
 		return win;
 	}
 	return NULL;
@@ -80,7 +97,9 @@ void workplay_win_destroy(WorkPlay_Win *win) {
 		text_layer_destroy(win->time_display);
 		text_layer_destroy(win->stop_display);
 		text_layer_destroy(win->start_display);
-		simple_menu_layer_destroy(win->menu);
+		action_bar_layer_destroy(win->actionbar);
+		gbitmap_destroy(win->tick_bitmap);
+		gbitmap_destroy(win->cross_bitmap);
 		free(win);
 		win = NULL;
 	}

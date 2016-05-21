@@ -9,6 +9,8 @@
 #define NUM_MENU_SECTIONS 1
 #define NUM_ITEMS 2
 
+int in_mode;
+
 typedef enum {
 	WORK, PLAY
 } MODE;
@@ -21,19 +23,22 @@ typedef struct {
 	TextLayer *stop_display;
 	TextLayer *start_display;
 
-	SimpleMenuLayer *menu;
-	SimpleMenuSection menu_sections[NUM_MENU_SECTIONS];
-	SimpleMenuItem menu_items[NUM_ITEMS];
+	GBitmap *tick_bitmap, *cross_bitmap;
+	ActionBarLayer *actionbar;
 } WorkPlay_Win;
+
+TextLayer *create_time_display(GRect bounds);
+TextLayer *create_stop_display(GRect bounds);
+TextLayer *create_start_display(GRect bounds);
+void create_actionbar(WorkPlay_Win *win);
 
 void start_timer(); 
 void stop_timer(); 
 
-void yes_callback();
-void no_callback();
-void stop_callback();
-void workplay_menu_sections_init(WorkPlay_Win *win);
-void workplay_menu_items_init(WorkPlay_Win *win);
+void start_callback(ClickRecognizerRef recognizer, void *context);
+void exit_callback(ClickRecognizerRef recognizer, void *context);
+void stop_callback(ClickRecognizerRef recognizer, void *context);
+void action_bar_provider(void *context);
 
 WorkPlay_Win *workplay_win_create(MODE mode);
 void workplay_win_destroy(WorkPlay_Win *win);
