@@ -1,17 +1,17 @@
 #include "select_win.h"
 
-void menu_select_callback() {
+static void menu_select_callback() {
 
 }
 
-void menu_sections_init(Select_Win *win) {	
+static void menu_sections_init(Select_Win *win) {	
 	win->menu_sections[0] = (SimpleMenuSection) {
 		.num_items = NUM_ITEMS,
 		.items = win->menu_items
 	};
 }
 
-void menu_items_init(Select_Win *win) {
+static void menu_items_init(Select_Win *win) {
 	int i = 0;
 	win->menu_items[i++] = (SimpleMenuItem) {
 		.title = "Work",
