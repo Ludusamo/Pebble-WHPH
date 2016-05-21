@@ -27,7 +27,16 @@ TextLayer *create_stop_display(GRect bounds) {
 }
 
 TextLayer *create_start_display(GRect bounds) {
-	return NULL;
+	#if defined(PBL_RECT)
+	bounds.origin.x -= ACTION_BAR_WIDTH;
+	#endif
+	bounds.origin.y += bounds.size.h * 1 / 3;	
+	bounds.size.h /= 3;
+	TextLayer *text = text_layer_create(bounds);
+	text_layer_set_text(text, "Start?");
+	text_layer_set_font(text, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+	text_layer_set_text_alignment(text, GTextAlignmentCenter);
+	return text;
 }
 
 void create_actionbar(WorkPlay_Win *win) {
@@ -51,15 +60,15 @@ void stop_timer() {
 }
 
 void start_callback(ClickRecognizerRef recognizer, void *context) {
-
+	start_timer();
 }
 
 void exit_callback(ClickRecognizerRef recognizer, void *context) {
-
+	window_stack_pop(true);
 }
 
 void stop_callback(ClickRecognizerRef recognizer, void *context) {
-
+	stop_timer();
 }
 
 void action_bar_provider(void *context) {
@@ -77,14 +86,20 @@ WorkPlay_Win *workplay_win_create(MODE mode) {
 		Layer *window_layer = window_get_root_layer(win->window);
 		GRect bounds = layer_get_bounds(window_layer);
 
-		win->time_display = create_time_display(bounds);
-		win->stop_display = create_stop_display(bounds);
-
-		layer_add_child(window_layer, text_layer_get_layer(win->time_display));
-		layer_add_child(window_layer, text_layer_get_layer(win->stop_display));
-		
-    		text_layer_enable_screen_text_flow_and_paging(win->time_display, 2);
-    		text_layer_enable_screen_text_flow_and_paging(win->stop_display, 2);
+		if (in_mode) {
+			win->time_display = create_time_display(bounds);
+			win->stop_display = create_stop_display(bounds);	
+			layer_add_child(window_layer, text_layer_get_layer(win->time_display));
+			layer_add_child(window_layer, text_layer_get_layer(win->stop_display));
+			
+			text_layer_enable_screen_text_flow_and_paging(win->time_display, 2);
+			text_layer_enable_screen_text_flow_and_paging(win->stop_display, 2);
+		} else {
+			win->start_display = create_start_display(bounds);
+			layer_add_child(window_layer, text_layer_get_layer(win->start_display));
+			
+			text_layer_enable_screen_text_flow_and_paging(win->start_display, 2);
+		}
 
 		create_actionbar(win);
 		return win;

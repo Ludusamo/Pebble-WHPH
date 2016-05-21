@@ -3,6 +3,8 @@
 
 #include <pebble.h>
 
+#include "workplay_win.h"
+
 #define NUM_MENU_SECTIONS 1
 #define NUM_ITEMS 2
 
