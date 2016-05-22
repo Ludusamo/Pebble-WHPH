@@ -1,8 +1,7 @@
 #include "title_win.h"
 
-void title_continue_callback(ClickRecognizerRef recognizer, void *context) {
-	Select_Win *win = select_win_create();
-	push_select_win(win, true);
+void title_continue_callback(ClickRecognizerRef recognizer, void *context) {	
+	push_select_win(select_win, true);
 }
 
 void title_click_config_provider(void *context) {
@@ -43,6 +42,8 @@ Title_Win *title_win_create() {
 		layer_add_child(window_layer, text_layer_get_layer(win->company));
     
     		text_layer_enable_screen_text_flow_and_paging(win->title, 2);
+
+		select_win = select_win_create();
 		return win;
 	}
 	return NULL;
@@ -50,8 +51,11 @@ Title_Win *title_win_create() {
 
 void title_win_destroy(Title_Win *win) {
 	if (win) {
+		select_win_destroy(select_win);
+		select_win = NULL;
 		text_layer_destroy(win->title);
 		text_layer_destroy(win->company);
+		window_destroy(win->window);
 		free(win);
 		win = NULL;
 	}

@@ -13,8 +13,9 @@ void deinit() {
 	title_win_destroy(title_win);
 }
 
-int main(void) {
+int main() {
 	init();
 	app_event_loop();
 	deinit();
+	return 0;
 }

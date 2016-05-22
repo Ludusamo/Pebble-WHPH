@@ -100,6 +100,7 @@ WorkPlay_Win *workplay_win_create(MODE mode) {
 		GRect bounds = layer_get_bounds(window_layer);
 
 		if (in_mode) {
+			win->start_display = 0;
 			win->time_display = create_time_display(bounds);
 			win->stop_display = create_stop_display(bounds);	
 			layer_add_child(window_layer, text_layer_get_layer(win->time_display));
@@ -108,6 +109,8 @@ WorkPlay_Win *workplay_win_create(MODE mode) {
 			text_layer_enable_screen_text_flow_and_paging(win->time_display, 2);
 			text_layer_enable_screen_text_flow_and_paging(win->stop_display, 2);
 		} else {
+			win->time_display = 0;
+			win->stop_display = 0;
 			win->start_display = create_start_display(bounds);
 			layer_add_child(window_layer, text_layer_get_layer(win->start_display));
 			
@@ -123,13 +126,15 @@ WorkPlay_Win *workplay_win_create(MODE mode) {
 }
 
 void workplay_win_destroy(WorkPlay_Win *win) {
-	if (win) {
-		text_layer_destroy(win->time_display);
-		text_layer_destroy(win->stop_display);
-		text_layer_destroy(win->start_display);
+	if (win) {	
+		if (win->time_display) text_layer_destroy(win->time_display);
+		if (win->stop_display) text_layer_destroy(win->stop_display);
+		if (win->start_display) text_layer_destroy(win->start_display);
 		action_bar_layer_destroy(win->actionbar);
 		gbitmap_destroy(win->tick_bitmap);
 		gbitmap_destroy(win->cross_bitmap);
+
+		window_destroy(win->window);
 		free(win);
 		win = NULL;
 	}

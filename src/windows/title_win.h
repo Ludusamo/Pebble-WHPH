@@ -5,6 +5,8 @@
 
 #include "select_win.h"
 
+Select_Win *select_win;
+
 typedef struct {
 	Window *window;	
 	TextLayer *title;
