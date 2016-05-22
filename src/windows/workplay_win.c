@@ -52,7 +52,20 @@ void create_actionbar(WorkPlay_Win *win) {
 }
 
 void start_timer() {
-
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Attempting to start timer.");
+	DictionaryIterator *out;
+	AppMessageResult result = app_message_outbox_begin(&out);
+	if (result == APP_MSG_OK) {
+		int value = 0;
+		dict_write_int(out, TIMER, &value, sizeof(int), true);
+	
+		result = app_message_outbox_send();
+		if (result != APP_MSG_OK) {
+			APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int) result);
+		}
+	} else {
+		APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int) result);
+	}
 }
 
 void stop_timer() {
@@ -102,6 +115,8 @@ WorkPlay_Win *workplay_win_create(MODE mode) {
 		}
 
 		create_actionbar(win);
+
+		app_message_open(64,64);
 		return win;
 	}
 	return NULL;

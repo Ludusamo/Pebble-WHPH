@@ -15,6 +15,10 @@ typedef enum {
 	WORK, PLAY
 } MODE;
 
+typedef enum {
+	TIMER, STORE
+} AppKey;
+
 typedef struct {
 	Window *window;
 	MODE mode;
