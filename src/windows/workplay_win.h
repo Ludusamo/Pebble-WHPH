@@ -9,11 +9,13 @@
 #define NUM_MENU_SECTIONS 1
 #define NUM_ITEMS 2
 
-int in_mode;
 
 typedef enum {
 	WORK, PLAY
 } MODE;
+
+int in_mode;
+MODE cur_mode;
 
 typedef enum {
 	TIMER, STORE
@@ -21,7 +23,6 @@ typedef enum {
 
 typedef struct {
 	Window *window;
-	MODE mode;
 
 	TextLayer *time_display;
 	TextLayer *stop_display;

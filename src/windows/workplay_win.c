@@ -52,11 +52,18 @@ void create_actionbar(WorkPlay_Win *win) {
 }
 
 void start_timer() {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Attempting to start timer.");
+	if (persist_exists(BEGINNING_TIME)) stop_timer();
+	persist_write_int(CUR_MODE, (int) cur_mode);
+
+	window_stack_pop(true);
+}
+
+void stop_timer() {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Attempting to stop timer.");
 	DictionaryIterator *out;
 	AppMessageResult result = app_message_outbox_begin(&out);
 	if (result == APP_MSG_OK) {
-		int value = 0;
+		int value = 1;
 		dict_write_int(out, TIMER, &value, sizeof(int), true);
 	
 		result = app_message_outbox_send();
@@ -66,9 +73,6 @@ void start_timer() {
 	} else {
 		APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int) result);
 	}
-}
-
-void stop_timer() {
 
 }
 
@@ -94,6 +98,7 @@ WorkPlay_Win *workplay_win_create(MODE mode) {
 	if (win) {
 		if (persist_exists(CUR_MODE)) in_mode = persist_read_int(CUR_MODE) == mode;
 		else in_mode = 0;
+		cur_mode = mode;
 		win->window = window_create();
 		
 		Layer *window_layer = window_get_root_layer(win->window);
