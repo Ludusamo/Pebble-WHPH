@@ -7,7 +7,7 @@ TextLayer *create_time_display(GRect bounds) {
 	bounds.origin.y += bounds.size.h / 20;
 	bounds.size.h /= 3;		
 	TextLayer *text = text_layer_create(bounds);
-	text_layer_set_text(text, "00:00");
+	text_layer_set_text(text, elapsed_time);
 	text_layer_set_font(text, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
 	text_layer_set_text_alignment(text, GTextAlignmentCenter);
 	return text;
@@ -51,9 +51,27 @@ void create_actionbar(WorkPlay_Win *win) {
 	action_bar_layer_add_to_window(win->actionbar, win->window);
 }
 
+void set_elapsed_time() {
+	time_t cur_t = time(NULL);
+	
+	int difference = cur_t - beginning;
+	int hours = difference / 3600;
+	difference %= 3600;
+	int minutes = difference / 60;
+	difference %= 60;
+	int seconds = difference;
+	snprintf(elapsed_time, 10, "%02d:%02d:%02d", hours, minutes, seconds);
+}
+
+void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+	set_elapsed_time();
+}
+
 void start_timer() {
 	if (persist_exists(BEGINNING_TIME)) stop_timer();
 	persist_write_int(CUR_MODE, (int) cur_mode);
+	time_t buffer;
+	persist_write_int(BEGINNING_TIME, (int) time(&buffer));
 
 	window_stack_pop(true);
 }
@@ -105,6 +123,8 @@ WorkPlay_Win *workplay_win_create(MODE mode) {
 		GRect bounds = layer_get_bounds(window_layer);
 
 		if (in_mode) {
+			beginning = persist_read_int(BEGINNING_TIME);	
+			set_elapsed_time();
 			win->start_display = 0;
 			win->time_display = create_time_display(bounds);
 			win->stop_display = create_stop_display(bounds);	
@@ -113,6 +133,8 @@ WorkPlay_Win *workplay_win_create(MODE mode) {
 			
 			text_layer_enable_screen_text_flow_and_paging(win->time_display, 2);
 			text_layer_enable_screen_text_flow_and_paging(win->stop_display, 2);
+			
+			tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 		} else {
 			win->time_display = 0;
 			win->stop_display = 0;

@@ -9,12 +9,13 @@
 #define NUM_MENU_SECTIONS 1
 #define NUM_ITEMS 2
 
-
 typedef enum {
 	WORK, PLAY
 } MODE;
 
 int in_mode;
+time_t beginning;
+char elapsed_time[10];
 MODE cur_mode;
 
 typedef enum {
@@ -36,6 +37,9 @@ TextLayer *create_time_display(GRect bounds);
 TextLayer *create_stop_display(GRect bounds);
 TextLayer *create_start_display(GRect bounds);
 void create_actionbar(WorkPlay_Win *win);
+
+void set_elapsed_time();
+void tick_handler(struct tm *tick_time, TimeUnits units_changed);
 
 void start_timer(); 
 void stop_timer(); 
