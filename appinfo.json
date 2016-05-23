@@ -1,5 +1,9 @@
 {
     "appKeys": {
+	"TYPE":0,
+	"TAG":1,
+	"TIME_START":2,
+	"TIME_STOP":3
     },
     "capabilities": [
         ""
