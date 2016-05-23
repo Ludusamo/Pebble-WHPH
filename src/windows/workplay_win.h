@@ -16,17 +16,17 @@ typedef enum {
 	WORK, PLAY
 } MODE;
 
-int in_mode;
-time_t beginning;
-char elapsed_time[10];
-MODE cur_mode;
-
 typedef enum {
 	TYPE,
 	TAG,
 	TIME_START,
 	TIME_STOP
 } AppKey;
+
+int in_mode;
+time_t beginning;
+char elapsed_time[10];
+MODE cur_mode;
 
 Window *workplay_window;
 
@@ -37,9 +37,10 @@ TextLayer *start_display;
 GBitmap *tick_bitmap, *cross_bitmap;
 ActionBarLayer *actionbar;
 
-TextLayer *create_time_display(GRect bounds);
-TextLayer *create_stop_display(GRect bounds);
-TextLayer *create_start_display(GRect bounds);
+void create_time_display(GRect bounds);
+void create_stop_display(GRect bounds);
+void create_start_display(GRect bounds);
+
 void create_actionbar();
 
 void set_elapsed_time();

@@ -1,42 +1,54 @@
 #include "workplay_win.h"
 
-TextLayer *create_time_display(GRect bounds) {
+void create_time_display(GRect bounds) {
+	Layer *window_layer = window_get_root_layer(workplay_window);
+
 	#if defined(PBL_RECT)
 	bounds.origin.x -= ACTION_BAR_WIDTH;
 	#endif
 	bounds.origin.y += bounds.size.h / 20;
 	bounds.size.h /= 3;		
-	TextLayer *text = text_layer_create(bounds);
-	text_layer_set_text(text, elapsed_time);
-	text_layer_set_font(text, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
-	text_layer_set_text_alignment(text, GTextAlignmentCenter);
-	return text;
+
+	time_display = text_layer_create(bounds);
+	text_layer_set_text(time_display, elapsed_time);
+	text_layer_set_font(time_display, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+	text_layer_set_text_alignment(time_display, GTextAlignmentCenter);
+	layer_add_child(window_layer, text_layer_get_layer(time_display));
+	text_layer_enable_screen_text_flow_and_paging(time_display, 2);
 }
 
-TextLayer *create_stop_display(GRect bounds) {
+void create_stop_display(GRect bounds) {
+	Layer *window_layer = window_get_root_layer(workplay_window);
+
 	#if defined(PBL_RECT)
 	bounds.origin.x -= ACTION_BAR_WIDTH;
 	#endif
 	bounds.origin.y += bounds.size.h * 2 / 3;	
 	bounds.size.h /= 3;
-	TextLayer *text = text_layer_create(bounds);
-	text_layer_set_text(text, "Stop?");
-	text_layer_set_font(text, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
-	text_layer_set_text_alignment(text, GTextAlignmentCenter);
-	return text;
+
+	stop_display = text_layer_create(bounds);
+	text_layer_set_text(stop_display, "Stop?");
+	text_layer_set_font(stop_display, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+	text_layer_set_text_alignment(stop_display, GTextAlignmentCenter);
+	layer_add_child(window_layer, text_layer_get_layer(stop_display));
+	text_layer_enable_screen_text_flow_and_paging(stop_display, 2);
 }
 
-TextLayer *create_start_display(GRect bounds) {
+void create_start_display(GRect bounds) {
+	Layer *window_layer = window_get_root_layer(workplay_window);
+
 	#if defined(PBL_RECT)
 	bounds.origin.x -= ACTION_BAR_WIDTH;
 	#endif
 	bounds.origin.y += bounds.size.h * 1 / 3;	
 	bounds.size.h /= 3;
-	TextLayer *text = text_layer_create(bounds);
-	text_layer_set_text(text, "Start?");
-	text_layer_set_font(text, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
-	text_layer_set_text_alignment(text, GTextAlignmentCenter);
-	return text;
+
+	start_display = text_layer_create(bounds);
+	text_layer_set_text(start_display, "Start?");
+	text_layer_set_font(start_display, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+	text_layer_set_text_alignment(start_display, GTextAlignmentCenter);
+	layer_add_child(window_layer, text_layer_get_layer(start_display));	
+	text_layer_enable_screen_text_flow_and_paging(start_display, 2);
 }
 
 void create_actionbar() {
@@ -125,24 +137,15 @@ void workplay_win_create(MODE mode) {
 		beginning = persist_read_int(BEGINNING_TIME);	
 		set_elapsed_time();
 		start_display = 0;
-		time_display = create_time_display(bounds);
-		stop_display = create_stop_display(bounds);	
-		layer_add_child(window_layer, text_layer_get_layer(time_display));
-		layer_add_child(window_layer, text_layer_get_layer(stop_display));
-		
-		text_layer_enable_screen_text_flow_and_paging(time_display, 2);
-		text_layer_enable_screen_text_flow_and_paging(stop_display, 2);
+		create_time_display(bounds);
+		create_stop_display(bounds);	
 		
 		tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 	} else {
 		time_display = 0;
 		stop_display = 0;
-		start_display = create_start_display(bounds);
-		layer_add_child(window_layer, text_layer_get_layer(start_display));
-		
-		text_layer_enable_screen_text_flow_and_paging(start_display, 2);
+		create_start_display(bounds);
 	}
-
 	create_actionbar();
 
 	app_message_open(INBOX_SIZE, OUTBOX_SIZE);
