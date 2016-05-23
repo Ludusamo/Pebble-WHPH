@@ -8,8 +8,6 @@
 #define NUM_MENU_SECTIONS 1
 #define NUM_ITEMS 2
 
-WorkPlay_Win *workplay_win;
-
 typedef struct {
 	Window *window;
 	SimpleMenuLayer *menu;

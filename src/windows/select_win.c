@@ -1,9 +1,8 @@
 #include "select_win.h"
 
 void menu_select_callback(int index, void *context) {
-	if (workplay_win) workplay_win_destroy(workplay_win);
-	workplay_win = workplay_win_create(index);
-	push_workplay_win(workplay_win, true);
+	workplay_win_create(index);
+	push_workplay_win(true);
 }
 
 void menu_sections_init(Select_Win *win) {	
@@ -45,10 +44,6 @@ Select_Win *select_win_create() {
 
 void select_win_destroy(Select_Win *win) {
 	if (win) {
-		if (workplay_win) {
-			workplay_win_destroy(workplay_win);
-			workplay_win = NULL;
-		}
 		simple_menu_layer_destroy(win->menu);
 		window_destroy(win->window);
 		free(win);

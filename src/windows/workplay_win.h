@@ -22,21 +22,19 @@ typedef enum {
 	TIMER, STORE
 } AppKey;
 
-typedef struct {
-	Window *window;
+Window *workplay_window;
 
-	TextLayer *time_display;
-	TextLayer *stop_display;
-	TextLayer *start_display;
+TextLayer *time_display;
+TextLayer *stop_display;
+TextLayer *start_display;
 
-	GBitmap *tick_bitmap, *cross_bitmap;
-	ActionBarLayer *actionbar;
-} WorkPlay_Win;
+GBitmap *tick_bitmap, *cross_bitmap;
+ActionBarLayer *actionbar;
 
 TextLayer *create_time_display(GRect bounds);
 TextLayer *create_stop_display(GRect bounds);
 TextLayer *create_start_display(GRect bounds);
-void create_actionbar(WorkPlay_Win *win);
+void create_actionbar();
 
 void set_elapsed_time();
 void tick_handler(struct tm *tick_time, TimeUnits units_changed);
@@ -49,10 +47,10 @@ void exit_callback(ClickRecognizerRef recognizer, void *context);
 void stop_callback(ClickRecognizerRef recognizer, void *context);
 void action_bar_provider(void *context);
 
-WorkPlay_Win *workplay_win_create(MODE mode);
-void workplay_win_destroy(WorkPlay_Win *win);
+void workplay_win_create(MODE mode);
+void workplay_win_destroy();
 
-void push_workplay_win(WorkPlay_Win *win, bool animated);
-void remove_workplay_win(WorkPlay_Win *win, bool animated);
+void push_workplay_win(bool animated);
+void remove_workplay_win(bool animated);
 
 #endif // PLAYWORKWIN_H

@@ -39,16 +39,16 @@ TextLayer *create_start_display(GRect bounds) {
 	return text;
 }
 
-void create_actionbar(WorkPlay_Win *win) {
-	win->actionbar = action_bar_layer_create();
-	action_bar_layer_set_click_config_provider(win->actionbar, action_bar_provider);
+void create_actionbar() {
+	actionbar = action_bar_layer_create();
+	action_bar_layer_set_click_config_provider(actionbar, action_bar_provider);
 	
-	win->tick_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TICK);
-	win->cross_bitmap = gbitmap_create_with_resource(RESOURCE_ID_CROSS);
+	tick_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TICK);
+	cross_bitmap = gbitmap_create_with_resource(RESOURCE_ID_CROSS);
 
-	action_bar_layer_set_icon(win->actionbar, BUTTON_ID_UP, win->tick_bitmap);
-	action_bar_layer_set_icon(win->actionbar, BUTTON_ID_DOWN, win->cross_bitmap);
-	action_bar_layer_add_to_window(win->actionbar, win->window);
+	action_bar_layer_set_icon(actionbar, BUTTON_ID_UP, tick_bitmap);
+	action_bar_layer_set_icon(actionbar, BUTTON_ID_DOWN, cross_bitmap);
+	action_bar_layer_add_to_window(actionbar, workplay_window);
 }
 
 void set_elapsed_time() {
@@ -61,6 +61,7 @@ void set_elapsed_time() {
 	difference %= 60;
 	int seconds = difference;
 	snprintf(elapsed_time, 10, "%02d:%02d:%02d", hours, minutes, seconds);
+	layer_mark_dirty((Layer*) time_display);
 }
 
 void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -73,7 +74,7 @@ void start_timer() {
 	time_t buffer;
 	persist_write_int(BEGINNING_TIME, (int) time(&buffer));
 
-	window_stack_pop(true);
+	remove_workplay_win(true);
 }
 
 void stop_timer() {
@@ -98,8 +99,8 @@ void start_callback(ClickRecognizerRef recognizer, void *context) {
 	start_timer();
 }
 
-void exit_callback(ClickRecognizerRef recognizer, void *context) {
-	window_stack_pop(true);
+void exit_callback(ClickRecognizerRef recognizer, void *context) {	
+	remove_workplay_win(true);
 }
 
 void stop_callback(ClickRecognizerRef recognizer, void *context) {
@@ -109,68 +110,62 @@ void stop_callback(ClickRecognizerRef recognizer, void *context) {
 void action_bar_provider(void *context) {
 	window_single_click_subscribe(BUTTON_ID_UP, (ClickHandler) (in_mode) ? stop_callback : start_callback);
 	window_single_click_subscribe(BUTTON_ID_DOWN, (ClickHandler) exit_callback);
+	window_single_click_subscribe(BUTTON_ID_BACK, (ClickHandler) exit_callback);
 }
 
-WorkPlay_Win *workplay_win_create(MODE mode) {
-	WorkPlay_Win *win = (WorkPlay_Win*) malloc(sizeof(WorkPlay_Win));
-	if (win) {
-		if (persist_exists(CUR_MODE)) in_mode = persist_read_int(CUR_MODE) == mode;
-		else in_mode = 0;
-		cur_mode = mode;
-		win->window = window_create();
+void workplay_win_create(MODE mode) {
+	if (persist_exists(CUR_MODE)) in_mode = persist_read_int(CUR_MODE) == mode;
+	else in_mode = 0;
+	cur_mode = mode;
+	workplay_window = window_create();
+	
+	Layer *window_layer = window_get_root_layer(workplay_window);
+	GRect bounds = layer_get_bounds(window_layer);
+
+	if (in_mode) {
+		beginning = persist_read_int(BEGINNING_TIME);	
+		set_elapsed_time();
+		start_display = 0;
+		time_display = create_time_display(bounds);
+		stop_display = create_stop_display(bounds);	
+		layer_add_child(window_layer, text_layer_get_layer(time_display));
+		layer_add_child(window_layer, text_layer_get_layer(stop_display));
 		
-		Layer *window_layer = window_get_root_layer(win->window);
-		GRect bounds = layer_get_bounds(window_layer);
-
-		if (in_mode) {
-			beginning = persist_read_int(BEGINNING_TIME);	
-			set_elapsed_time();
-			win->start_display = 0;
-			win->time_display = create_time_display(bounds);
-			win->stop_display = create_stop_display(bounds);	
-			layer_add_child(window_layer, text_layer_get_layer(win->time_display));
-			layer_add_child(window_layer, text_layer_get_layer(win->stop_display));
-			
-			text_layer_enable_screen_text_flow_and_paging(win->time_display, 2);
-			text_layer_enable_screen_text_flow_and_paging(win->stop_display, 2);
-			
-			tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
-		} else {
-			win->time_display = 0;
-			win->stop_display = 0;
-			win->start_display = create_start_display(bounds);
-			layer_add_child(window_layer, text_layer_get_layer(win->start_display));
-			
-			text_layer_enable_screen_text_flow_and_paging(win->start_display, 2);
-		}
-
-		create_actionbar(win);
-
-		app_message_open(64,64);
-		return win;
+		text_layer_enable_screen_text_flow_and_paging(time_display, 2);
+		text_layer_enable_screen_text_flow_and_paging(stop_display, 2);
+		
+		tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+	} else {
+		time_display = 0;
+		stop_display = 0;
+		start_display = create_start_display(bounds);
+		layer_add_child(window_layer, text_layer_get_layer(start_display));
+		
+		text_layer_enable_screen_text_flow_and_paging(start_display, 2);
 	}
-	return NULL;
+
+	create_actionbar();
+
+	app_message_open(64,64);
 }
 
-void workplay_win_destroy(WorkPlay_Win *win) {
-	if (win) {	
-		if (win->time_display) text_layer_destroy(win->time_display);
-		if (win->stop_display) text_layer_destroy(win->stop_display);
-		if (win->start_display) text_layer_destroy(win->start_display);
-		action_bar_layer_destroy(win->actionbar);
-		gbitmap_destroy(win->tick_bitmap);
-		gbitmap_destroy(win->cross_bitmap);
+void workplay_win_destroy() {
+	if (time_display) text_layer_destroy(time_display);
+	if (stop_display) text_layer_destroy(stop_display);
+	if (start_display) text_layer_destroy(start_display);
+	action_bar_layer_destroy(actionbar);
+	gbitmap_destroy(tick_bitmap);
+	gbitmap_destroy(cross_bitmap);
+	tick_timer_service_unsubscribe();
 
-		window_destroy(win->window);
-		free(win);
-		win = NULL;
-	}
+	window_destroy(workplay_window);
 }
 
-void push_workplay_win(WorkPlay_Win *win, bool animated) {
-	window_stack_push(win->window, animated);
+void push_workplay_win(bool animated) {
+	if (workplay_window) window_stack_push(workplay_window, animated);
 }
 
-void remove_workplay_win(WorkPlay_Win *win, bool animated) {
-	window_stack_remove(win->window, animated);
+void remove_workplay_win(bool animated) {
+	window_stack_remove(workplay_window, animated);
+	workplay_win_destroy();
 }
