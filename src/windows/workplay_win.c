@@ -52,9 +52,7 @@ void create_actionbar() {
 }
 
 void set_elapsed_time() {
-	time_t cur_t = time(NULL);
-	
-	int difference = cur_t - beginning;
+	int difference = time(NULL) - beginning;
 	int hours = difference / 3600;
 	difference %= 3600;
 	int minutes = difference / 60;
@@ -69,12 +67,9 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 void start_timer() {
-	if (persist_exists(BEGINNING_TIME)) stop_timer();
+	if (persist_exists(CUR_MODE)) stop_timer();
 	persist_write_int(CUR_MODE, (int) cur_mode);
-	time_t buffer;
-	persist_write_int(BEGINNING_TIME, (int) time(&buffer));
-
-	remove_workplay_win(true);
+	persist_write_int(BEGINNING_TIME, (int) time(NULL));
 }
 
 void stop_timer() {
@@ -82,8 +77,10 @@ void stop_timer() {
 	DictionaryIterator *out;
 	AppMessageResult result = app_message_outbox_begin(&out);
 	if (result == APP_MSG_OK) {
-		int value = 1;
-		dict_write_int(out, TIMER, &value, sizeof(int), true);
+		dict_write_uint8(out, TYPE, (int) cur_mode);
+		dict_write_uint32(out, TIME_START, (int) beginning);
+		dict_write_uint32(out, TIME_STOP, (int) time(NULL));
+		dict_write_cstring(out, TAG, "PLACEHOLDER");
 	
 		result = app_message_outbox_send();
 		if (result != APP_MSG_OK) {
@@ -92,11 +89,12 @@ void stop_timer() {
 	} else {
 		APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int) result);
 	}
-
+	persist_delete(CUR_MODE);
 }
 
 void start_callback(ClickRecognizerRef recognizer, void *context) {
 	start_timer();
+	remove_workplay_win(true);
 }
 
 void exit_callback(ClickRecognizerRef recognizer, void *context) {	
@@ -105,6 +103,7 @@ void exit_callback(ClickRecognizerRef recognizer, void *context) {
 
 void stop_callback(ClickRecognizerRef recognizer, void *context) {
 	stop_timer();
+	remove_workplay_win(true);
 }
 
 void action_bar_provider(void *context) {
@@ -146,7 +145,7 @@ void workplay_win_create(MODE mode) {
 
 	create_actionbar();
 
-	app_message_open(64,64);
+	app_message_open(INBOX_SIZE, OUTBOX_SIZE);
 }
 
 void workplay_win_destroy() {

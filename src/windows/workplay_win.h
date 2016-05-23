@@ -9,6 +9,9 @@
 #define NUM_MENU_SECTIONS 1
 #define NUM_ITEMS 2
 
+#define OUTBOX_SIZE 256
+#define INBOX_SIZE 64
+
 typedef enum {
 	WORK, PLAY
 } MODE;
@@ -19,7 +22,10 @@ char elapsed_time[10];
 MODE cur_mode;
 
 typedef enum {
-	TIMER, STORE
+	TYPE,
+	TAG,
+	TIME_START,
+	TIME_STOP
 } AppKey;
 
 Window *workplay_window;
