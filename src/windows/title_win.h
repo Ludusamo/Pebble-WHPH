@@ -5,22 +5,18 @@
 
 #include "select_win.h"
 
-Select_Win *select_win;
-
-typedef struct {
-	Window *window;	
-	TextLayer *title;
-	TextLayer *company;
-} Title_Win;
+Window *title_window;	
+TextLayer *title;
+TextLayer *company;
 
 void title_continue_callback(ClickRecognizerRef recognizer, void *context);
 void title_click_config_provider(void *context);
-void register_click_providers(Title_Win *win);
+void register_click_providers();
 
-Title_Win *title_win_create();
-void title_win_destroy(Title_Win *win);
+void title_win_create();
+void title_win_destroy();
 
-void push_title_win(Title_Win *win, bool animated);
-void remove_title_win(Title_Win *win, bool animated);
+void push_title_win(bool animated);
+void remove_title_win(bool animated);
 
 #endif // TITLEWIN_H
