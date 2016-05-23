@@ -1,8 +1,10 @@
 #include "select_win.h"
 
 void menu_select_callback(int index, void *context) {
-	workplay_win_create(index);
-	push_workplay_win(true);
+	if (index < 2) {
+		workplay_win_create(index);
+		push_workplay_win(true);
+	}
 }
 
 void menu_sections_init() {	
