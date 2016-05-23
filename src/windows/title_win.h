@@ -5,6 +5,9 @@
 
 #include "select_win.h"
 
+#define TITLE "Work Hard\nPlay Hard!"
+#define COMPANY "Ludusamo"
+
 Window *title_window;	
 TextLayer *title;
 TextLayer *company;

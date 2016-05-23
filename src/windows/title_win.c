@@ -15,7 +15,7 @@ void register_click_providers() {
 void create_title(Layer* window_layer, GRect bounds) {
 	bounds.origin.y += bounds.size.h / 20;
 	title = text_layer_create(bounds);
-	text_layer_set_text(title, "Work Hard\nPlay Hard!");
+	text_layer_set_text(title, TITLE);
 	text_layer_set_font(title, fonts_get_system_font(FONT_KEY_DROID_SERIF_28_BOLD));
 	text_layer_set_text_alignment(title, GTextAlignmentCenter);
 	layer_add_child(window_layer, text_layer_get_layer(title));
@@ -26,7 +26,7 @@ void create_company(Layer* window_layer, GRect bounds) {
 	bounds.size.h /= 4;
 	bounds.origin.y += bounds.size.h * 3;
 	company = text_layer_create(bounds);
-	text_layer_set_text(company, "Ludusamo");
+	text_layer_set_text(company, COMPANY);
 	text_layer_set_text_alignment(company, GTextAlignmentCenter);
 	layer_add_child(window_layer, text_layer_get_layer(company));
 }
