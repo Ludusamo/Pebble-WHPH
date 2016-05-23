@@ -25,7 +25,7 @@ Pebble.addEventListener('appmessage', function(e) {
 		localStorage.setItem('work', JSON.stringify(work));
 		break;
 	case PLAY:
-		var play = localStorage.getItem('play');
+		var play = JSON.parse(localStorage.getItem('play'));
 		if (!play) play = [];
 		var session = createSession(dict['TIME_START'], dict['TIME_STOP'], dict['TAG']);
 		play.push(session);
