@@ -24,6 +24,10 @@ void menu_items_init() {
 		.title = "Play",
 		.callback = menu_select_callback
 	};
+	menu_items[i++] = (SimpleMenuItem) {
+		.title = "Settings",
+		.callback = menu_select_callback
+	};
 }
 
 void select_win_create() {

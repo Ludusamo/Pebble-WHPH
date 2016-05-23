@@ -6,9 +6,6 @@
 #define BEGINNING_TIME 0
 #define CUR_MODE 1
 
-#define NUM_MENU_SECTIONS 1
-#define NUM_ITEMS 2
-
 #define OUTBOX_SIZE 256
 #define INBOX_SIZE 64
 

@@ -6,7 +6,7 @@
 #include "workplay_win.h"
 
 #define NUM_MENU_SECTIONS 1
-#define NUM_ITEMS 2
+#define NUM_ITEMS 3
 
 Window *select_window;
 SimpleMenuLayer *menu;
