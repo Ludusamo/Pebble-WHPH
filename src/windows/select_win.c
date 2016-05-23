@@ -4,6 +4,9 @@ void menu_select_callback(int index, void *context) {
 	if (index < 2) {
 		workplay_win_create(index);
 		push_workplay_win(true);
+	} else if (index == 2) {
+		data_win_create();
+		push_data_win(true);
 	}
 }
 
@@ -24,6 +27,11 @@ void menu_items_init() {
 		.title = "Play",
 		.callback = menu_select_callback
 	};
+	menu_items[i++] = (SimpleMenuItem) {
+		.title = "Data",
+		.callback = menu_select_callback
+	};
+
 }
 
 void select_win_create() {

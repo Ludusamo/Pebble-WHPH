@@ -142,7 +142,6 @@ void workplay_win_create(MODE mode) {
 	}
 	create_actionbar();
 
-	app_message_open(INBOX_SIZE, OUTBOX_SIZE);
 }
 
 void workplay_win_destroy() {
