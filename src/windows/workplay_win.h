@@ -37,9 +37,9 @@ TextLayer *start_display;
 GBitmap *tick_bitmap, *cross_bitmap;
 ActionBarLayer *actionbar;
 
-void create_time_display(GRect bounds);
-void create_stop_display(GRect bounds);
-void create_start_display(GRect bounds);
+void create_time_display(Layer *window_layer, GRect bounds);
+void create_stop_display(Layer *window_layer, GRect bounds);
+void create_start_display(Layer *window_layer, GRect bounds);
 
 void create_actionbar();
 

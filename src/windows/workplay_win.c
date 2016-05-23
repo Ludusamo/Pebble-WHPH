@@ -1,8 +1,6 @@
 #include "workplay_win.h"
 
-void create_time_display(GRect bounds) {
-	Layer *window_layer = window_get_root_layer(workplay_window);
-
+void create_time_display(Layer *window_layer, GRect bounds) {
 	#if defined(PBL_RECT)
 	bounds.origin.x -= ACTION_BAR_WIDTH;
 	#endif
@@ -17,9 +15,7 @@ void create_time_display(GRect bounds) {
 	text_layer_enable_screen_text_flow_and_paging(time_display, 2);
 }
 
-void create_stop_display(GRect bounds) {
-	Layer *window_layer = window_get_root_layer(workplay_window);
-
+void create_stop_display(Layer *window_layer, GRect bounds) {
 	#if defined(PBL_RECT)
 	bounds.origin.x -= ACTION_BAR_WIDTH;
 	#endif
@@ -34,9 +30,7 @@ void create_stop_display(GRect bounds) {
 	text_layer_enable_screen_text_flow_and_paging(stop_display, 2);
 }
 
-void create_start_display(GRect bounds) {
-	Layer *window_layer = window_get_root_layer(workplay_window);
-
+void create_start_display(Layer *window_layer, GRect bounds) {
 	#if defined(PBL_RECT)
 	bounds.origin.x -= ACTION_BAR_WIDTH;
 	#endif
@@ -137,14 +131,14 @@ void workplay_win_create(MODE mode) {
 		beginning = persist_read_int(BEGINNING_TIME);	
 		set_elapsed_time();
 		start_display = 0;
-		create_time_display(bounds);
-		create_stop_display(bounds);	
+		create_time_display(window_layer, bounds);
+		create_stop_display(window_layer, bounds);	
 		
 		tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 	} else {
 		time_display = 0;
 		stop_display = 0;
-		create_start_display(bounds);
+		create_start_display(window_layer, bounds);
 	}
 	create_actionbar();
 

@@ -13,6 +13,9 @@ void title_continue_callback(ClickRecognizerRef recognizer, void *context);
 void title_click_config_provider(void *context);
 void register_click_providers();
 
+void create_title(Layer* window_layer, GRect bounds);
+void create_company(Layer* window_layer, GRect bounds);
+
 void title_win_create();
 void title_win_destroy();
 

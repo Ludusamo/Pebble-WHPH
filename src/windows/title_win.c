@@ -12,34 +12,35 @@ void register_click_providers() {
 	window_set_click_config_provider(title_window, title_click_config_provider);
 }
 
+void create_title(Layer* window_layer, GRect bounds) {
+	bounds.origin.y += bounds.size.h / 20;
+	title = text_layer_create(bounds);
+	text_layer_set_text(title, "Work Hard\nPlay Hard!");
+	text_layer_set_font(title, fonts_get_system_font(FONT_KEY_DROID_SERIF_28_BOLD));
+	text_layer_set_text_alignment(title, GTextAlignmentCenter);
+	layer_add_child(window_layer, text_layer_get_layer(title));
+	text_layer_enable_screen_text_flow_and_paging(title, 2);
+}
+
+void create_company(Layer* window_layer, GRect bounds) {
+	bounds.size.h /= 4;
+	bounds.origin.y += bounds.size.h * 3;
+	company = text_layer_create(bounds);
+	text_layer_set_text(company, "Ludusamo");
+	text_layer_set_text_alignment(company, GTextAlignmentCenter);
+	layer_add_child(window_layer, text_layer_get_layer(company));
+}
+
 void title_win_create() {
 	title_window = window_create();
 
 	register_click_providers();
 
 	Layer *window_layer = window_get_root_layer(title_window);
-	GRect title_bounds = layer_get_bounds(window_layer);
-	GRect company_bounds = layer_get_bounds(window_layer);
+	GRect bounds = layer_get_bounds(window_layer);
 
-	// Relative positioning
-	title_bounds.origin.y += title_bounds.size.h / 20;
-	title = text_layer_create(title_bounds);
-
-	company_bounds.size.h /= 4;
-	company_bounds.origin.y += company_bounds.size.h * 3;
-	company = text_layer_create(company_bounds);
-
-	text_layer_set_text(title, "Work Hard\nPlay Hard!");
-	text_layer_set_font(title, fonts_get_system_font(FONT_KEY_DROID_SERIF_28_BOLD));
-	text_layer_set_text_alignment(title, GTextAlignmentCenter);
-
-	text_layer_set_text(company, "Ludusamo");
-	text_layer_set_text_alignment(company, GTextAlignmentCenter);
-
-	layer_add_child(window_layer, text_layer_get_layer(title));
-	layer_add_child(window_layer, text_layer_get_layer(company));
-
-	text_layer_enable_screen_text_flow_and_paging(title, 2);
+	create_title(window_layer, bounds);
+	create_company(window_layer, bounds);
 
 	select_win_create();
 }
