@@ -133,7 +133,6 @@ void workplay_win_create(MODE mode) {
 		create_start_display(window_layer, bounds);
 	}
 	create_actionbar();
-	init_app_message();
 }
 
 void workplay_win_destroy() {

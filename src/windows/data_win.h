@@ -3,6 +3,8 @@
 
 #include <pebble.h>
 
+#include "module/app_message.h"
+
 Window *data_window;
 MenuLayer *data_list;
 

@@ -1,10 +1,12 @@
 #include <pebble.h>
 #include "windows/title_win.h"
+#include "module/app_message.h"
 
 void init() {
 	title_win_create();
 	push_title_win(true);
 	
+	init_app_message();
 }
 
 void deinit() {

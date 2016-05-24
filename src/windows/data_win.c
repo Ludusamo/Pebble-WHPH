@@ -53,18 +53,9 @@ void select_callback(struct MenuLayer *menu_layer, MenuIndex *cell_index, void *
 
 void req_data() {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Requesting Data");
-	DictionaryIterator *out;
-	AppMessageResult result = app_message_outbox_begin(&out);
-	if (result == APP_MSG_OK) {
-		dict_write_uint8(out, 0, 2);
-	
-		result = app_message_outbox_send();
-		if (result != APP_MSG_OK) {
-			APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int) result);
-		}
-	} else {
-		APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int) result);
-	}
+	begin_app_message();
+	register_uint8(TYPE, 2);
+	send_message();
 }
 
 void receive_data_callback(DictionaryIterator *iter, void *context) {
@@ -94,15 +85,14 @@ void receive_data_callback(DictionaryIterator *iter, void *context) {
 		});
 		layer_add_child(window_layer, menu_layer_get_layer(data_list));
 	}
+	window_set_click_config_provider(data_window, data_click_config_provider);
 }
 
 void data_win_create() {
 	data_window = window_create();
 	
 	app_message_register_inbox_received(receive_data_callback);
-	req_data();
-	
-	window_set_click_config_provider(data_window, data_click_config_provider);
+	req_data();	
 }
 
 void data_win_destroy() {
