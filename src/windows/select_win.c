@@ -7,6 +7,10 @@ void menu_select_callback(int index, void *context) {
 	} else if (index == 2) {
 		data_win_create();
 		push_data_win(true);
+	} else if (index == 3) {
+		begin_app_message();
+		register_uint8(TYPE, 3);
+		send_message();
 	}
 }
 
@@ -31,7 +35,10 @@ void menu_items_init() {
 		.title = "Data",
 		.callback = menu_select_callback
 	};
-
+	menu_items[i++] = (SimpleMenuItem) {
+		.title = "Clear Data",
+		.callback = menu_select_callback
+	};
 }
 
 void select_win_create() {

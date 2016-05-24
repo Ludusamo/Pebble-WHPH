@@ -34,14 +34,18 @@ Pebble.addEventListener('appmessage', function(e) {
 	case 2:
 		var work = JSON.parse(localStorage.getItem('work'));
 		var workTime = 0;
-		for (var i = 0; i < work.length; i++) {
-			console.log(workTime);
-			workTime += work[i].end - work[i].start;
+		if (work) {
+			for (var i = 0; i < work.length; i++) {
+				console.log(workTime);
+				workTime += work[i].end - work[i].start;
+			}
 		}
 		var play = JSON.parse(localStorage.getItem('play'));
 		var playTime = 0;
-		for (var i = 0; i < play.length; i++) {
-			playTime += play[i].end - play[i].start;
+		if (play) {
+			for (var i = 0; i < play.length; i++) {
+				playTime += play[i].end - play[i].start;
+			}
 		}
 		var dict = {
 			'TIME_START': workTime,

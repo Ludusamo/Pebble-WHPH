@@ -5,9 +5,10 @@
 
 #include "workplay_win.h"
 #include "data_win.h"
+#include "module/app_message.h"
 
 #define NUM_MENU_SECTIONS 1
-#define NUM_ITEMS 3
+#define NUM_ITEMS 4
 
 Window *select_window;
 SimpleMenuLayer *menu;
