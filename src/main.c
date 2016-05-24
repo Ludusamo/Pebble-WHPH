@@ -1,14 +1,10 @@
 #include <pebble.h>
 #include "windows/title_win.h"
 
-#define OUTBOX_SIZE 256
-#define INBOX_SIZE 64
-
 void init() {
 	title_win_create();
 	push_title_win(true);
 	
-	app_message_open(INBOX_SIZE, OUTBOX_SIZE);
 }
 
 void deinit() {

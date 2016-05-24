@@ -79,22 +79,14 @@ void start_timer() {
 }
 
 void stop_timer() {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Attempting to stop timer.");
-	DictionaryIterator *out;
-	AppMessageResult result = app_message_outbox_begin(&out);
-	if (result == APP_MSG_OK) {
-		dict_write_uint8(out, TYPE, (int) cur_mode);
-		dict_write_uint32(out, TIME_START, (int) beginning);
-		dict_write_uint32(out, TIME_STOP, (int) time(NULL));
-		dict_write_cstring(out, TAG, "PLACEHOLDER");
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Attempting to stop timer.%lu", (uint32_t) time(NULL));
+	begin_app_message();
+	register_uint8(TYPE, (int) cur_mode);
+	register_uint32(TIME_START, (int) beginning);
+	register_uint32(TIME_STOP, (int) time(NULL));
+	register_cstring(TAG, "PLACEHOLDER");
+	send_message();
 	
-		result = app_message_outbox_send();
-		if (result != APP_MSG_OK) {
-			APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int) result);
-		}
-	} else {
-		APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int) result);
-	}
 	persist_delete(CUR_MODE);
 }
 
@@ -141,7 +133,7 @@ void workplay_win_create(MODE mode) {
 		create_start_display(window_layer, bounds);
 	}
 	create_actionbar();
-
+	init_app_message();
 }
 
 void workplay_win_destroy() {

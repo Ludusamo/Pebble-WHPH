@@ -2,6 +2,7 @@
 #define WORKPLAYWIN_H
 
 #include <pebble.h>
+#include "module/app_message.h"
 
 #define BEGINNING_TIME 0
 #define CUR_MODE 1
@@ -9,13 +10,6 @@
 typedef enum {
 	WORK, PLAY
 } MODE;
-
-typedef enum {
-	TYPE,
-	TAG,
-	TIME_START,
-	TIME_STOP
-} AppKey;
 
 int in_mode;
 time_t beginning;
