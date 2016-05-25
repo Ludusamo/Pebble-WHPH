@@ -121,10 +121,11 @@ void workplay_win_create(MODE mode) {
 
 	if (in_mode) {
 		beginning = persist_read_int(BEGINNING_TIME);	
-		set_elapsed_time();
 		start_display = 0;
 		create_time_display(window_layer, bounds);
 		create_stop_display(window_layer, bounds);	
+
+		set_elapsed_time();
 		
 		tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 	} else {
