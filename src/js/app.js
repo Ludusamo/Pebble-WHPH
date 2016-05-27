@@ -8,6 +8,16 @@ function createSession(start, end, tag) {
 	return session;
 }
 
+function calcTotalTime(timeArr) {
+	var totalTime = 0;
+	if (timeArr) {
+		for (var i = 0; i < timeArr.length; i++) {
+			totalTime += timeArr[i].end - timeArr[i].start;
+		}
+	}
+	return totalTime;
+}
+
 Pebble.addEventListener('ready', function() {
 	console.log('PebbleKit JS Ready!');
 });
@@ -33,23 +43,10 @@ Pebble.addEventListener('appmessage', function(e) {
 		break;
 	case 2:
 		var work = JSON.parse(localStorage.getItem('work'));
-		var workTime = 0;
-		if (work) {
-			for (var i = 0; i < work.length; i++) {
-				console.log(workTime);
-				workTime += work[i].end - work[i].start;
-			}
-		}
 		var play = JSON.parse(localStorage.getItem('play'));
-		var playTime = 0;
-		if (play) {
-			for (var i = 0; i < play.length; i++) {
-				playTime += play[i].end - play[i].start;
-			}
-		}
 		var dict = {
-			'TIME_START': workTime,
-			'TIME_STOP': playTime
+			'TIME_START': calcTotalTime(work),
+			'TIME_STOP': calcTotalTime(play)
 		};
 		Pebble.sendAppMessage(dict, function() {
 			console.log('Message sent successfully: ' + JSON.stringify(dict));
