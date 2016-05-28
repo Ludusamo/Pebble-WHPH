@@ -53,12 +53,8 @@ void bipercent_draw_legend(Layer *layer, GContext *ctx) {
 	rect1.size.w = INDIC_SIZE;
 	rect1.size.h = INDIC_SIZE;
 	graphics_fill_rect(ctx, rect1, 0, GCornerNone);
-
-	GRect rect2 = grect_inset(rect, GEdgeInsets(top_inset + LEGEND_PAD, 0, 0, rect.size.w / 3));
-	rect2.size.w = INDIC_SIZE;
-	rect2.size.h = INDIC_SIZE;
-
-	graphics_draw_rect(ctx, rect2);
+	rect1.origin.y += LEGEND_PAD;
+	graphics_draw_rect(ctx, rect1);
 }
 
 void bipercent_update_proc(Layer *layer, GContext *ctx) {
