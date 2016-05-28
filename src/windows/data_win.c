@@ -51,6 +51,43 @@ void select_callback(struct MenuLayer *menu_layer, MenuIndex *cell_index, void *
 
 }
 
+void canvas_update_proc(Layer *layer, GContext *ctx) {
+	int32_t total_time = work_time + play_time;
+	int32_t percent_work = (work_time * 100) / total_time;
+	int work_end_angle = percent_work * 360 / 100;
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Percent Work: %d", (int)percent_work);
+
+	graphics_context_set_stroke_color(ctx, GColorBlack);
+	graphics_context_set_fill_color(ctx, GColorBlack);
+
+	GRect rect = layer_get_bounds(layer);
+	
+	graphics_fill_radial(ctx, rect, GOvalScaleModeFitCircle, RADIAL_R, DEG_TO_TRIGANGLE(0), DEG_TO_TRIGANGLE(work_end_angle));
+	graphics_draw_arc(ctx, rect, GOvalScaleModeFitCircle, DEG_TO_TRIGANGLE(work_end_angle), DEG_TO_TRIGANGLE(360));
+	graphics_draw_arc(ctx, calc_rect(layer, 1), GOvalScaleModeFitCircle, DEG_TO_TRIGANGLE(work_end_angle), DEG_TO_TRIGANGLE(360));
+
+	graphics_context_set_text_color(ctx, GColorBlack);
+	int top_inset = (rect.size.h * 2 / 5);
+	int left_inset = INDIC_SIZE;
+	graphics_draw_text(ctx, "Work", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), grect_inset(rect, GEdgeInsets(top_inset, 0, 0, left_inset)), GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);
+	graphics_draw_text(ctx, "Play", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), grect_inset(rect, GEdgeInsets(top_inset + LEGEND_PAD, 0, 0, left_inset)), GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);
+
+	GRect work_rect = grect_inset(rect, GEdgeInsets(top_inset, 0, 0, rect.size.w / 3));
+	work_rect.size.w = INDIC_SIZE;
+	work_rect.size.h = INDIC_SIZE;
+	graphics_fill_rect(ctx, work_rect, 0, GCornerNone);
+
+	GRect play_rect = grect_inset(rect, GEdgeInsets(top_inset + LEGEND_PAD, 0, 0, rect.size.w / 3));
+	play_rect.size.w = INDIC_SIZE;
+	play_rect.size.h = INDIC_SIZE;
+
+	graphics_draw_rect(ctx, play_rect);
+}
+
+GRect calc_rect(Layer *layer, uint8_t arc_id) {
+  return grect_inset(layer_get_bounds(layer), GEdgeInsets(arc_id * RADIAL_R));
+}
+
 void req_data() {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Requesting Data");
 	begin_app_message();
@@ -74,16 +111,9 @@ void receive_data_callback(DictionaryIterator *iter, void *context) {
 		Layer *window_layer = window_get_root_layer(data_window);
 		GRect bounds = layer_get_bounds(window_layer);
 
-		data_list = menu_layer_create(bounds);
-
-		menu_layer_set_click_config_onto_window(data_list, data_window);
-		menu_layer_set_callbacks(data_list, NULL, (MenuLayerCallbacks) {
-			.get_num_rows = get_num_rows_callback,
-			.draw_row = draw_row_callback,
-			.get_cell_height = get_cell_height_callback,
-			.select_click = select_callback
-		});
-		layer_add_child(window_layer, menu_layer_get_layer(data_list));
+		canvas = layer_create(bounds);
+		layer_set_update_proc(canvas, canvas_update_proc);
+		layer_add_child(window_layer, canvas);
 	}
 	window_set_click_config_provider(data_window, data_click_config_provider);
 }

@@ -5,8 +5,13 @@
 
 #include "module/app_message.h"
 
+#define RADIAL_R 20
+#define INDIC_SIZE 14
+#define LEGEND_PAD 20
+
 Window *data_window;
 MenuLayer *data_list;
+Layer *canvas;
 
 int32_t work_time;
 int32_t play_time;
@@ -18,6 +23,9 @@ uint16_t get_num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, vo
 void draw_row_callback(GContext *ctx, const Layer *cell_layer, MenuIndex *cell_index, void *context);
 int16_t get_cell_height_callback(struct MenuLayer *menu_layer, MenuIndex *cell_index, void *context);
 void select_callback(struct MenuLayer *menu_layer, MenuIndex *cell_index, void *callback_context);
+
+void canvas_update_proc(Layer *layer, GContext *ctx);
+GRect calc_rect(Layer *layer, uint8_t arc_id);
 
 void req_data();
 void receive_data_callback(DictionaryIterator *iter, void *context);
