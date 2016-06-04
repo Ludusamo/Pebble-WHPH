@@ -11,6 +11,8 @@ void menu_select_callback(int index, void *context) {
 		begin_app_message();
 		register_uint8(TYPE, 3);
 		persist_delete(20);
+		persist_delete(30);
+		persist_delete(31);
 		send_message();
 	}
 }

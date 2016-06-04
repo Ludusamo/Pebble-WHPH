@@ -7,6 +7,8 @@ void reset_handler(WakeupId id, int32_t cookie) {
 	begin_app_message();
 	register_uint8(TYPE, 3);
 	send_message();
+	persist_delete(30);
+	persist_delete(31);
 	register_reset_wakeup();
 }
 
