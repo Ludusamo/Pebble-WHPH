@@ -25,9 +25,11 @@ void begin_app_message() {
 	if (result != APP_MSG_OK) APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int) result);
 }
 
-void send_message() {
+int send_message() {
 	AppMessageResult result = app_message_outbox_send();
 	if (result != APP_MSG_OK) {
 		APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int) result);
+		return 0;
 	}
+	return 1;
 }

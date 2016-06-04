@@ -3,6 +3,7 @@
 
 #include <pebble.h>
 #include "module/app_message.h"
+#include "module/timer.h"
 
 #define BEGINNING_TIME 0
 #define CUR_MODE 1
@@ -33,9 +34,6 @@ void create_actionbar();
 
 void set_elapsed_time();
 void tick_handler(struct tm *tick_time, TimeUnits units_changed);
-
-void start_timer(); 
-void stop_timer(); 
 
 void start_callback(ClickRecognizerRef recognizer, void *context);
 void exit_callback(ClickRecognizerRef recognizer, void *context);

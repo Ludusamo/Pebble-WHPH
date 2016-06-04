@@ -72,26 +72,8 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 	set_elapsed_time();
 }
 
-void start_timer() {
-	if (persist_exists(CUR_MODE)) stop_timer();
-	persist_write_int(CUR_MODE, (int) cur_mode);
-	persist_write_int(BEGINNING_TIME, (int) time(NULL));
-}
-
-void stop_timer() {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Attempting to stop timer.%lu", (uint32_t) time(NULL));
-	begin_app_message();
-	register_uint8(TYPE, (int) cur_mode);
-	register_uint32(TIME_START, (int) beginning);
-	register_uint32(TIME_STOP, (int) time(NULL));
-	register_cstring(TAG, "PLACEHOLDER");
-	send_message();
-	
-	persist_delete(CUR_MODE);
-}
-
 void start_callback(ClickRecognizerRef recognizer, void *context) {
-	start_timer();
+	start_timer(cur_mode, time(NULL));
 	remove_workplay_win(true);
 }
 
@@ -100,7 +82,7 @@ void exit_callback(ClickRecognizerRef recognizer, void *context) {
 }
 
 void stop_callback(ClickRecognizerRef recognizer, void *context) {
-	stop_timer();
+	stop_timer(cur_mode, beginning, time(NULL), "PLACEHOLDER");
 	remove_workplay_win(true);
 }
 

@@ -23,6 +23,6 @@ void register_uint16(AppKey type, uint16_t i);
 void register_uint32(AppKey type, uint32_t i);
 void register_cstring(AppKey type, char *s);
 
-void send_message();
+int send_message();
 
 #endif // APPMESSAGE_H
