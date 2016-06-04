@@ -36,4 +36,13 @@ void stop_timer(int mode, int beginning, int end, char *tag) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Attempting to stop timer.%lu", (uint32_t) time(NULL));
 	store_js(mode, beginning, end, tag);
 	persist_delete(CUR_MODE);
+	
+	switch (mode) {
+	case WORK_CASE:
+		persist_write_int(WORK_TIME, persist_read_int(WORK_TIME) + (end - beginning));
+		break;
+	case PLAY_CASE:
+		persist_write_int(PLAY_TIME, persist_read_int(PLAY_TIME) + (end - beginning));
+		break;
+	}
 }
