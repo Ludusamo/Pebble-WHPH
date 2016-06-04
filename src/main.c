@@ -8,8 +8,10 @@ void init() {
 	push_title_win(true);
 	
 	init_app_message();
-	if (launch_reason() == APP_LAUNCH_WAKEUP) reset_handler(0, 0);
-	else register_reset_wakeup();
+	if (launch_reason() == APP_LAUNCH_WAKEUP) {
+		reset_handler(0, 0);
+		window_stack_pop(true);
+	} else register_reset_wakeup();
 }
 
 void deinit() {

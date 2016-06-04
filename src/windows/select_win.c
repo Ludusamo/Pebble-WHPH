@@ -10,6 +10,7 @@ void menu_select_callback(int index, void *context) {
 	} else if (index == 3) {
 		begin_app_message();
 		register_uint8(TYPE, 3);
+		persist_delete(20);
 		send_message();
 	}
 }
