@@ -12,8 +12,8 @@ void data_click_config_provider(void *context) {
 void data_win_create() {
 	data_window = window_create();
 	
-	uint32_t work_time = persist_read_int(WORK_TIME);
-	uint32_t play_time = persist_read_int(PLAY_TIME);
+	uint32_t work_time = persist_read_int(WORK_TIME_MEM_LOC);
+	uint32_t play_time = persist_read_int(PLAY_TIME_MEM_LOC);
 
 	Layer *window_layer = window_get_root_layer(data_window);
 	GRect bounds = layer_get_bounds(window_layer);

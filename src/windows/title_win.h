@@ -4,9 +4,7 @@
 #include <pebble.h>
 
 #include "select_win.h"
-
-#define TITLE "Work Hard\nPlay Hard!"
-#define COMPANY "Ludusamo"
+#include "module/shared_val.h"
 
 Window *title_window;	
 TextLayer *title;

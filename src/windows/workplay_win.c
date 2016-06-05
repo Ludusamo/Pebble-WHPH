@@ -92,8 +92,8 @@ void action_bar_provider(void *context) {
 	window_single_click_subscribe(BUTTON_ID_BACK, (ClickHandler) exit_callback);
 }
 
-void workplay_win_create(MODE mode) {
-	if (persist_exists(CUR_MODE)) in_mode = persist_read_int(CUR_MODE) == mode;
+void workplay_win_create(int mode) {
+	if (persist_exists(CUR_MODE_MEM_LOC)) in_mode = persist_read_int(CUR_MODE_MEM_LOC) == mode;
 	else in_mode = 0;
 	cur_mode = mode;
 	workplay_window = window_create();
@@ -102,7 +102,7 @@ void workplay_win_create(MODE mode) {
 	GRect bounds = layer_get_bounds(window_layer);
 
 	if (in_mode) {
-		beginning = persist_read_int(BEGINNING_TIME);	
+		beginning = persist_read_int(BEGINNING_TIME_MEM_LOC);	
 		start_display = 0;
 		create_time_display(window_layer, bounds);
 		create_stop_display(window_layer, bounds);	

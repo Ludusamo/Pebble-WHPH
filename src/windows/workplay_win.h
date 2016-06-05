@@ -4,18 +4,12 @@
 #include <pebble.h>
 #include "module/app_message.h"
 #include "module/timer.h"
-
-#define BEGINNING_TIME 0
-#define CUR_MODE 1
-
-typedef enum {
-	WORK, PLAY
-} MODE;
+#include "module/shared_val.h"
 
 int in_mode;
 time_t beginning;
 char elapsed_time[10];
-MODE cur_mode;
+int cur_mode;
 
 Window *workplay_window;
 
@@ -40,7 +34,7 @@ void exit_callback(ClickRecognizerRef recognizer, void *context);
 void stop_callback(ClickRecognizerRef recognizer, void *context);
 void action_bar_provider(void *context);
 
-void workplay_win_create(MODE mode);
+void workplay_win_create(int mode);
 void workplay_win_destroy();
 
 void push_workplay_win(bool animated);

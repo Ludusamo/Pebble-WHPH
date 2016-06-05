@@ -5,9 +5,7 @@
 
 #include "module/app_message.h"
 #include "layers/bipercent_layer.h"
-
-#define WORK_TIME 30
-#define PLAY_TIME 31
+#include "module/shared_val.h"
 
 Window *data_window;
 BipercentLayer *bipercent;
