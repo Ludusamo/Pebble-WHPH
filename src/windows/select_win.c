@@ -8,12 +8,9 @@ void menu_select_callback(int index, void *context) {
 		data_win_create();
 		push_data_win(true);
 	} else if (index == 3) {
-		begin_app_message();
-		register_uint8(TYPE, 3);
 		persist_delete(20);
 		persist_delete(30);
 		persist_delete(31);
-		send_message();
 	}
 }
 

@@ -18,9 +18,6 @@ int32_t play_time;
 void exit_data_win(ClickRecognizerRef recognizer, void *context);
 void data_click_config_provider(void *context);
 
-void req_data();
-void receive_data_callback(DictionaryIterator *iter, void *context);
-
 void data_win_create();
 void data_win_destroy();
 

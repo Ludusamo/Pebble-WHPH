@@ -15,17 +15,6 @@ int store_local(int mode, int beginning, int end, char *tag) {
 	return 1;
 }
 
-int store_js(int mode, int beginning, int end, char *tag) {
-	begin_app_message();	
-	register_uint8(TYPE, mode);
-	register_uint32(TIME_START, beginning);
-	register_uint32(TIME_STOP, end);
-	register_cstring(TAG, tag);
-	if (!send_message()) 
-		if (!store_local(mode, beginning, end, tag)) return 0;
-	return 1;
-}
-
 void start_timer(int mode, int beginning) {
 	if (persist_exists(CUR_MODE)) stop_timer(mode, beginning, time(NULL), "PLACEHOLDER");
 	persist_write_int(CUR_MODE, mode);
@@ -34,7 +23,6 @@ void start_timer(int mode, int beginning) {
 
 void stop_timer(int mode, int beginning, int end, char *tag) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Attempting to stop timer.%lu", (uint32_t) time(NULL));
-	store_js(mode, beginning, end, tag);
 	persist_delete(CUR_MODE);
 	
 	switch (mode) {
