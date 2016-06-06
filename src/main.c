@@ -1,17 +1,16 @@
 #include <pebble.h>
 #include "windows/title_win.h"
 #include "module/app_message.h"
-#include "module/wakeup.h"
+#include "module/daily_reset.h"
 
 void init() {
 	title_win_create();
 	push_title_win(true);
 	
 	init_app_message();
-	if (launch_reason() == APP_LAUNCH_WAKEUP) {
-		reset_handler(0, 0);
-		window_stack_pop(true);
-	} else register_reset_wakeup();
+	if (!is_same_day()) {
+		daily_reset();
+	}
 }
 
 void deinit() {

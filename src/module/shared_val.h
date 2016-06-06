@@ -9,6 +9,7 @@
 
 #define BEGINNING_TIME_MEM_LOC 0
 #define CUR_MODE_MEM_LOC 1
+#define CUR_DAY_MEM_LOC 2
 
 #define NUM_ENTRIES_MEM_LOC 100
 #define MAX_ENTRIES 100
